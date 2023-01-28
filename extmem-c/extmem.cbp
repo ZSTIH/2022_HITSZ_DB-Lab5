@@ -35,9 +35,13 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="extmem.h" />
-		<Unit filename="test.c">
+		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="utils.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="utils.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
