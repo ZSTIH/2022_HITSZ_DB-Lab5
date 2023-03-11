@@ -60,7 +60,7 @@ void linear_select(Buffer *buf, int c_value)
             {
                 if ((record_count != 0) && (record_count % 7 == 0))
                 {
-                    // record_count 不为 0 且为 7 的倍数时, 说明已经写满了一个缓存区数据块
+                    // record_count 不为 0 且为 7 的倍数时, 说明已经写满了一个缓冲区数据块
                     writeTupleToDisk(blk_write, buf, output_disk_num, PRINT);
                     output_disk_num++;
                 }
@@ -173,6 +173,8 @@ void index_select(Buffer *buf, int c_value)
         blkno++;
         freeBlockInBuffer(blk_read, buf);
     }
+
+    // 将剩余记录(不超过 7 个的那部分)写入磁盘
     if (writeBlockToDisk(blk_write, output_disk_num, buf) != 0)
     {
         perror("Writing Block Failed!\n");
@@ -246,7 +248,7 @@ void index_select(Buffer *buf, int c_value)
             {
                 if ((tuple_count != 0) && (tuple_count % 7 == 0))
                 {
-                    // tuple_count 不为 0 且为 7 的倍数时, 说明已经写满了一个缓存区数据块
+                    // tuple_count 不为 0 且为 7 的倍数时, 说明已经写满了一个缓冲区数据块
                     writeTupleToDisk(blk_write, buf, output_disk_num, PRINT);
                     output_disk_num++;
                 }
@@ -761,7 +763,7 @@ void difference(Buffer *buf)
     }
     while (blkno_s < blkno_s_upper)
     {
-        // 由于计算的是 S - R , 两者相等时不能输出任何元组, S 和 R 都要右移
+        // 由于计算的是 S - R , 两者相等时不能输出任何元组, S 和 R 都要后移
         if ((blkno_r < blkno_r_upper) && (blkno_s < blkno_s_upper) && (is_equal(blk_R + offset_r, blk_S + offset_s)))
         {
             if (offset_s < 48) // 移动 S

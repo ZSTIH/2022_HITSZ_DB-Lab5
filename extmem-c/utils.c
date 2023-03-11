@@ -2,7 +2,7 @@
 
 char s[5];
 
-// 将缓存区数据块中的字符转换为整型数
+// 将缓冲区数据块中的字符转换为整型数
 int getIntFromBlock(unsigned char *blk)
 {
     // R.A, R.B, S.C, S.D 均是三位数
@@ -14,7 +14,7 @@ int getIntFromBlock(unsigned char *blk)
     return atoi(s);
 }
 
-// 将关系中的元组写回缓存区数据块
+// 将关系中的元组写回缓冲区数据块
 void writeTupleToBlock(unsigned char *blk, int x, int y)
 {
     for (int i = 0; i < 3; i++)
@@ -43,7 +43,7 @@ void writeTupleToBlock(unsigned char *blk, int x, int y)
     }
 }
 
-// 当缓存区数据块中的元组写满以后, 将其写回到磁盘中
+// 当缓冲区数据块中的元组写满以后, 将其写回到磁盘中
 void writeTupleToDisk(unsigned char *blk, Buffer *buf, int output_disk_num, int print_flag)
 {
     writeTupleToBlock(blk + 56, output_disk_num + 1, TUPLE_END_FLAG);
@@ -57,7 +57,7 @@ void writeTupleToDisk(unsigned char *blk, Buffer *buf, int output_disk_num, int 
         printf("注：结果写入磁盘：%d\n", output_disk_num);
     }
 
-    // 清空当前的缓存区数据块, 便于之后继续使用它
+    // 清空当前的缓冲区数据块, 便于之后继续使用它
     memset(blk, 0, buf->blkSize);
     *(blk - 1) = BLOCK_UNAVAILABLE;
 }
@@ -190,7 +190,7 @@ void tpmms_second_stage(Buffer *buf, int disk_num_start, int disk_num_end, int o
 
     int blk_num_sorted = 0;         // 当前处理完的块数
     int offset_within_blk[6] = {0}; // 每个数据块比较到的位置
-    int tuple_num_sorted = 0;       // blk_write中的记录数(即处理完的记录数)
+    int tuple_num_sorted = 0;       // blk_write 中的记录数(即处理完的记录数)
     while (blk_num_sorted < disk_num_end - disk_num_start + 1)
     {
         int min_group = -1, min_offset = 0; // 最小值所在组及其对应偏移
@@ -201,6 +201,7 @@ void tpmms_second_stage(Buffer *buf, int disk_num_start, int disk_num_end, int o
             {
                 continue;
             }
+            // 当前组非空时, 与已有最小值进行比较并判断是否需要更新
             if ((min_group == -1) || compare_tuple(blk_read[min_group] + min_offset, blk_read[group] + offset_within_blk[group]))
             {
                 min_group = group;
